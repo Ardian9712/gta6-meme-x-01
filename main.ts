@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { copyFile, mkdir, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,6 +8,10 @@ const botRoot = resolve(repositoryDirectory, process.env.MAKEFUN_BOT_DIR ?? "/bo
 const outputRoot = resolve(repositoryDirectory, process.env.MAKEFUN_OUTPUT_DIR ?? "/output");
 const inputFile = resolve(botRoot, "POST.json");
 const outputFile = resolve(outputRoot, "POST.json");
+
+function sha256(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
+}
 
 try {
   const document = JSON.parse(await readFile(inputFile, "utf8"));
@@ -24,7 +29,16 @@ try {
 
   await mkdir(outputRoot, { recursive: true });
   await copyFile(inputFile, outputFile);
-  console.log(`Handed in X post ${statusAddress[1]} to ${outputFile}.`);
+  const [sourceBytes, copiedBytes] = await Promise.all([
+    readFile(inputFile),
+    readFile(outputFile),
+  ]);
+  const sourceHash = sha256(sourceBytes);
+  const copiedHash = sha256(copiedBytes);
+  if (copiedHash !== sourceHash) {
+    throw new Error(`SHA-256 mismatch: expected ${sourceHash}, received ${copiedHash}.`);
+  }
+  console.log(`Handed in X post ${statusAddress[1]} (${copiedBytes.byteLength} bytes, SHA-256 verified) to ${outputFile}.`);
 } catch (failure) {
   const detail = failure instanceof Error ? failure.message : String(failure);
   console.error(`Unable to hand in POST.json (${inputFile} -> ${outputFile}): ${detail}`);
