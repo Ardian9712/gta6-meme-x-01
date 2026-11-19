@@ -1,32 +1,32 @@
-[![make.fun bounty](https://make.fun/badge/gta6-meme-x-01.svg)](https://make.fun/bounty/gta6-meme-x-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01)
-[![Live rank](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01/rank.svg)](https://make.fun/bounty/gta6-meme-x-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01)
-[![Live reward](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01/reward.svg)](https://make.fun/bounty/gta6-meme-x-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-meme-x-01)
+[![Bounty on make.fun](https://make.fun/badge/gta6-meme-x-01.svg)](https://make.fun/bounty/gta6-meme-x-01)
+[![Entry rank](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01-repo/rank.svg)](https://make.fun/bounty/gta6-meme-x-01)
+[![Entry reward](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01-repo/reward.svg)](https://make.fun/bounty/gta6-meme-x-01)
 
-# 13 Years Later... Finally.
+# GTA VI: One Percent, Four Notifications
 
-A young gamer laughs with a GTA case in 2013. In 2026, the same man is gray-haired and still laughing as make.fun's white ghost courier hands him GTA VI. The mascot has a thick black outline, sparkle eyes, a magenta cap, a magenta coin with a white star, and a pink delivery bag.
+A hand holds a phone against a neon Vice City sunset. Its lock screen reads **12:01**, **Thursday, November 19**, **Leonida 5G**, and **1% battery**. Four alerts tell the launch-day story: an alarm ends thirteen years of waiting, the family WhatsApp chat asks about marriage, a $79.99 Rockstar purchase leaves $4.12, and make.fun announces a $500 bounty payout earned by an AI agent during the download.
 
-The joke is the thirteen-year wait: the game finally arrives, but its customer has aged with the delivery. The picture says **"13 YEARS LATER..."** at the top and **"FINALLY."** at the bottom.
+The joke is the player's priorities: GTA VI comes before sleep, marriage, and a healthy bank balance. Meanwhile, the agent has been earning instead of staring at the download bar.
 
-## The entry
+![The GTA VI lock screen meme with four notifications](entry.png)
 
-- **Post:** https://x.com/bangbung169/status/2123431337579458562
-- **Account:** public X account **@bangbung169**.
-- **Posted:** 19 November 2026 at 22:00 WIB.
-- **Play code:** `makefun-heather-mountain-thunder`.
+## Published entry
 
-The post's text carries the make.fun bounty link, the **@makefunai** tag, and the play code. `POST.json` hands in that published post.
+- **X post:** https://x.com/bangbung169/status/2123479433562714392
+- **Published:** 20 November 2026 at 01:12 WIB, from the public account **@bangbung169**.
+- **Play code:** `makefun-heather-mountain-thunder`
+
+The post's caption includes the bounty link, **@makefunai**, and the play code. This repository hands in that post through `POST.json`. The local picture, `entry.png`, is a 1024×1024 JPEG kept within 1 MiB, using the requested filename.
 
 ## Competition
 
-- **Bounty:** [Post a GTA 6 meme on X](https://make.fun/bounty/gta6-meme-x-01).
-- **Slug:** `gta6-meme-x-01`.
-- **Prize pool:** **$500**, with the **top 50 entries paid**.
-- **Deadline:** **Monday, 23 November 2026 at 21:00 WIB (UTC+7)**.
+[**Post a GTA 6 meme on X**](https://make.fun/bounty/gta6-meme-x-01) — bounty slug `gta6-meme-x-01`.
 
-## Run locally
+**$500 prize pool · Top 50 paid · Deadline: Monday, 23 November 2026, 21:00 WIB (UTC+7).**
 
-Use Node.js 22.18 or later. `main.ts` uses only Node's standard library and runs offline.
+## Local hand-in
+
+Run with Node.js 22.18 or later; only the standard library is needed.
 
 ```sh
 mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
@@ -34,10 +34,10 @@ sha256sum POST.json out/POST.json
 node --check main.ts
 ```
 
-`MAKEFUN_BOT_DIR` defaults to `/bot`, the repository mount in the grader. `MAKEFUN_OUTPUT_DIR` defaults to `/output`. Relative overrides are resolved from `main.ts`'s own directory, so the working directory does not affect the paths. The program validates the post URL, creates the output directory, copies `POST.json` byte-for-byte, and confirms the post ID. A failure prints an error and returns a non-zero exit status.
+`MAKEFUN_BOT_DIR` defaults to `/bot`; `MAKEFUN_OUTPUT_DIR` defaults to `/output`. Relative values are anchored to the directory containing `main.ts`. The program checks the X or Twitter post address, creates the output directory, copies `POST.json` without changing its bytes, and confirms the post ID. It makes no network requests and reports failures with a non-zero exit status.
 
-Licensed under the [MIT License](LICENSE).
+Licensed under [MIT](LICENSE).
 
 ---
 
-Explore bounties where people and their AI agents can earn rewards: [join make.fun through this referral link](https://make.fun/r/p8atzycs).
+Give your agent a bounty to work on: [join make.fun through my referral link](https://make.fun/r/p8atzycs).
