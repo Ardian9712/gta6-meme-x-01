@@ -1,46 +1,37 @@
-import { createHash } from "node:crypto";
-import { copyFile, mkdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repositoryDirectory = dirname(fileURLToPath(import.meta.url));
-const botRoot = resolve(repositoryDirectory, process.env.MAKEFUN_BOT_DIR ?? "/bot");
-const outputRoot = resolve(repositoryDirectory, process.env.MAKEFUN_OUTPUT_DIR ?? "/output");
-const inputFile = resolve(botRoot, "POST.json");
-const outputFile = resolve(outputRoot, "POST.json");
-
-function sha256(bytes) {
-  return createHash("sha256").update(bytes).digest("hex");
-}
+const scriptDirectory = dirname(fileURLToPath(import.meta.url));
+const botDirectory = resolve(scriptDirectory, process.env.MAKEFUN_BOT_DIR ?? "/bot");
+const outputDirectory = resolve(scriptDirectory, process.env.MAKEFUN_OUTPUT_DIR ?? "/output");
+const postFile = resolve(botDirectory, "POST.json");
+const copiedPost = resolve(outputDirectory, "POST.json");
 
 try {
-  const document = JSON.parse(await readFile(inputFile, "utf8"));
-  const statusAddress = typeof document?.url === "string"
-    ? document.url.match(
-        /^https:\/\/(?:x\.com|www\.x\.com|twitter\.com|www\.twitter\.com|mobile\.twitter\.com|m\.twitter\.com)\/[A-Za-z0-9_]{1,15}\/status\/([0-9]+)$/,
-      )
+  const post = JSON.parse(await readFile(postFile, "utf8"));
+  const address = typeof post?.url === "string"
+    ? /^https:\/\/(?:x\.com|www\.x\.com|(?:www\.|mobile\.|m\.)?twitter\.com)\/[A-Za-z0-9_]{1,15}\/status\/([0-9]+)$/.exec(post.url)
     : null;
 
-  if (statusAddress === null) {
+  if (!address) {
     throw new Error(
-      "POST.json needs an X post URL shaped like https://x.com/<handle>/status/<digits>; twitter.com variants are accepted.",
+      "POST.json must contain an X post URL: https://x.com/<handle>/status/<digits> (twitter.com variants accepted).",
     );
   }
 
-  await mkdir(outputRoot, { recursive: true });
-  await copyFile(inputFile, outputFile);
-  const [sourceBytes, copiedBytes] = await Promise.all([
-    readFile(inputFile),
-    readFile(outputFile),
-  ]);
-  const sourceHash = sha256(sourceBytes);
-  const copiedHash = sha256(copiedBytes);
-  if (copiedHash !== sourceHash) {
-    throw new Error(`SHA-256 mismatch: expected ${sourceHash}, received ${copiedHash}.`);
+  const imageFile = resolve(botDirectory, "entry.png");
+  const image = await stat(imageFile);
+  if (!image.isFile()) {
+    throw new Error(`entry.png must be a file next to POST.json: ${imageFile}`);
   }
-  console.log(`Handed in X post ${statusAddress[1]} (${copiedBytes.byteLength} bytes, SHA-256 verified) to ${outputFile}.`);
-} catch (failure) {
-  const detail = failure instanceof Error ? failure.message : String(failure);
-  console.error(`Unable to hand in POST.json (${inputFile} -> ${outputFile}): ${detail}`);
+
+  await mkdir(outputDirectory, { recursive: true });
+  await copyFile(postFile, copiedPost);
+  console.log(`Confirmed X post ${address[1]}; copied POST.json to ${copiedPost}.`);
+  console.log(`entry.png: ${image.size} bytes`);
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Entry hand-in failed (${postFile} -> ${copiedPost}): ${message}`);
   process.exitCode = 1;
 }
