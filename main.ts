@@ -26,10 +26,42 @@ try {
     throw new Error(`entry.png must be a file next to POST.json: ${imageFile}`);
   }
 
+  const imageBytes = await readFile(imageFile);
+  let dimensions;
+  let offset = 2;
+  if (imageBytes.length >= 2 && imageBytes.readUInt16BE(0) === 0xffd8) {
+    while (offset + 4 <= imageBytes.length) {
+      if (imageBytes[offset++] !== 0xff) break;
+      while (imageBytes[offset] === 0xff) offset++;
+      const marker = imageBytes[offset++];
+      if (marker === 0xda || marker === 0xd9 || offset + 2 > imageBytes.length) break;
+      if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) continue;
+      const length = imageBytes.readUInt16BE(offset);
+      if (length < 2 || offset + length > imageBytes.length) break;
+      // JPEG frame headers carry pixel dimensions; C4, C8, and CC are other segment types.
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+        if (length >= 8) {
+          dimensions = {
+            width: imageBytes.readUInt16BE(offset + 5),
+            height: imageBytes.readUInt16BE(offset + 3),
+          };
+        }
+        break;
+      }
+      offset += length;
+    }
+  }
+  if (!dimensions) {
+    throw new Error("Cannot decode entry.png's JPEG pixel dimensions: missing or malformed frame header.");
+  }
+  if (dimensions.width !== 1024 || dimensions.height !== 1024) {
+    throw new Error(`entry.png must decode to exactly 1024x1024 pixels; found ${dimensions.width}x${dimensions.height}.`);
+  }
+
   await mkdir(outputDirectory, { recursive: true });
   await copyFile(postFile, copiedPost);
   console.log(`Confirmed X post ${address[1]}; copied POST.json to ${copiedPost}.`);
-  console.log(`entry.png: ${image.size} bytes`);
+  console.log(`entry.png: ${image.size} bytes; ${dimensions.width}x${dimensions.height} pixels`);
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
   console.error(`Entry hand-in failed (${postFile} -> ${copiedPost}): ${message}`);
