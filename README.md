@@ -2,17 +2,11 @@
 [![Live entry rank](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01/rank.svg)](https://make.fun/bounty/gta6-meme-x-01)
 [![Live entry reward](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01/reward.svg)](https://make.fun/bounty/gta6-meme-x-01)
 
-# Growing Up with GTA
+# GTA VI Pre-Order Warranty Card — Still Covered
 
-A neon Vice City sunset frames three generations of gaming snacks:
+A 2013 GTA VI pre-order warranty is still covered after 13 years of waiting. The punchline is in the warranty terms: "Rockstar reserves the right to launch at any time, including never".
 
-- **2004 — San Andreas:** sliced bread, an orange juice carton, and cookies.
-- **2013 — GTA V:** a cola can, a pepperoni pizza slice, and a bag of chips.
-- **2026 — GTA VI:** Lucia and Jason on the game case, beside coffee, glasses, and medicine boxes labelled **Omeprazol**, **Melatonina**, and **Paracetamol**.
-
-The games keep getting sequels; the player keeps getting older. Childhood snacks become takeaway, then a survival kit for staying awake, seeing the screen, and making it through another launch.
-
-![GROWING UP WITH GTA: the player's diet changes from snacks to coffee and medicine across 2004, 2013, and 2026.](entry.png)
+![GTA VI — PRE-ORDER WARRANTY CARD: serial GTA6-2013-001304, purchased in 2013 with a 13-year warranty and a STILL COVERED stamp. Terms: "Rockstar reserves the right to launch at any time, including never". A small white Make.fun ghost holds a magenta star coin at the bottom-right.](entry.png)
 
 ## Entry on X
 
