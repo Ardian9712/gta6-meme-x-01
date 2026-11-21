@@ -1,37 +1,39 @@
-# GTA VI Pre-Order Warranty Card — Still Covered
+# GTA VI Gaming Contract — Signed, Sealed, Still Waiting
 
 [![make.fun competition](https://make.fun/badge/gta6-meme-x-01.svg)](https://make.fun/bounty/gta6-meme-x-01)
 [![make.fun rank](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01/rank.svg)](https://make.fun/bounty/gta6-meme-x-01)
 [![make.fun reward](https://make.fun/badge/gta6-meme-x-01/Ardian9712/gta6-meme-x-01/reward.svg)](https://make.fun/bounty/gta6-meme-x-01)
 
-A GTA VI pre-order from 2013 has spent thirteen years waiting for the game, yet its thirteen-year warranty is **STILL COVERED**. The fine print explains this remarkable service:
+After thirteen years of waiting, GTA VI's launch week calls for a signed household contract. Entry #25 replaces #22c's warranty card with solemn paperwork protecting some very unserious demands:
 
-> Rockstar reserves the right to launch at any time, including never
+1. Uninterrupted play from 19–29 November 2026.
+2. No walking in front of the TV during a mission.
+3. Nobody gets to say “it's just a game.”
 
-Entry **#22c** replaces the **#21 diet-timeline** meme in this repository.
+Rockstar Games appears as the witness. Break the agreement and the penalty is “thirteen (13) more years of waiting.”
 
-![GTA VI pre-order warranty card, serial GTA6-2013-001304, purchased in 2013, with a 13-year warranty and STILL COVERED stamp; a small white Make.fun ghost holds a magenta star coin at the bottom-right.](entry.png)
+![Formal paper contract headed GTA VI GAMING CONTRACT, three numbered clauses, a red APPROVED stamp surrounded by 13 YEARS IN THE MAKING, and a small white make.fun ghost with make.fun text at the bottom-left](entry.png)
 
-## Published X post
+## Published X entry
 
-The entry is the public post at <https://x.com/bangbung169/status/2124042323055296874>.
+[@bangbung169's post](https://x.com/bangbung169/status/2124073649602724305) is the live public entry. Its text includes the [bounty link](https://make.fun/bounty/gta6-meme-x-01), mentions `@makefunai`, tells readers they can earn money on make.fun, and carries the play code `makefun-heather-mountain-thunder`.
 
-Its text includes [the bounty link](https://make.fun/bounty/gta6-meme-x-01), `@makefunai`, and the play code `makefun-heather-mountain-thunder`. `POST.json` supplies this published post to the make.fun runner.
+`POST.json` supplies that published post's URL as the submission.
 
 ## Local verification
 
-`main.ts` runs directly on Node.js 22.18 or later using only Node's standard library. It reads the colocated `POST.json`, validates an X or Twitter status address, and extracts its numeric post ID without losing precision. It reads `entry.png` as bytes and finds the JPEG start-of-frame dimensions: the file is a JPEG despite its `.png` name, and must measure exactly **1024 × 1024** pixels.
+Run with Node.js 22.18 or newer. `main.ts` checks the X/Twitter status URL and extracts its numeric post ID, reads the JPEG start-of-frame header in `entry.png`, and requires exactly 1024×1024 pixels. It then copies the original `POST.json` bytes into the output directory and prints the post ID and image size. It uses only Node's standard library and makes no network requests; failures print an error and exit non-zero.
 
-After validation, the script writes the original `POST.json` bytes into the output directory. It reports the post ID, image dimensions, and image byte count, exiting with code 0. Invalid input, unreadable files, and output errors produce a contextual error and a non-zero exit code. All checks are local, with no network requests or external packages.
+Despite its filename, `entry.png` contains JPEG data. Verification checks the file's bytes and frame header rather than trusting its extension.
 
-Run these commands from the repository directory:
+`MAKEFUN_BOT_DIR` selects the input directory (default `/bot`), and `MAKEFUN_OUTPUT_DIR` selects the output directory (default `/output`). Relative overrides resolve from the directory containing `main.ts`.
 
 ```sh
 mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
 sha256sum POST.json out/POST.json
+cmp POST.json out/POST.json
 node --check main.ts
+rm -r out
 ```
 
-The two SHA-256 values must match. The successful image report should show `JPEG 1024x1024 (580000 bytes)`.
-
-The runner defaults to `/bot` for inputs and `/output` for output. Set `MAKEFUN_BOT_DIR` and `MAKEFUN_OUTPUT_DIR` to override those directories. Relative override paths are resolved from `main.ts`'s own directory, so they behave consistently even when the script is launched elsewhere.
+The run should exit 0 and report a 1024×1024 JPEG. Both SHA-256 values must match, and `cmp` should exit 0 without printing anything. A JPEG of any other dimensions must fail verification.
